@@ -7,6 +7,8 @@ export async function POST(req: Request, res: Response) {
     const { client_name, file_key, file_name } = body
     await loadS3IntoPinecone(file_key)
 
+    // TODO - Save to client record and file(key, url, name) DB using neonDB client and return clientId
+
     return NextResponse.json({})
   } catch (error) {
     console.error(error)

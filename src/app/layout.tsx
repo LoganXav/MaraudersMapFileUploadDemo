@@ -1,31 +1,28 @@
-"use client"
-import { QueryClient, QueryClientProvider } from "react-query"
-
 import { fontMono, fontRoboto, fontRoobert, fontReckless } from "@/lib/fonts"
 import "./globals.css"
 import { cn } from "@/lib/utils"
 import { Toaster } from "@/components/common/toast-layout"
+import { AppProviders } from "@/providers"
 
 export default function RootLayout({
   children
 }: Readonly<{
   children: React.ReactNode
 }>) {
-  const queryClient = new QueryClient()
   return (
     <html lang="en" suppressHydrationWarning>
       <body
         className={cn(
-          "min-h-screen bg-secondary font-roobert font-medium antialiased",
+          "min-h-screen bg-background font-roobert font-medium antialiased",
           fontRoboto.variable,
           fontMono.variable,
           fontRoobert.variable,
           fontReckless.variable
         )}
       >
-        <QueryClientProvider client={queryClient}>
+        <AppProviders>
           <main className="container pt-8">{children}</main>
-        </QueryClientProvider>
+        </AppProviders>
         <Toaster position="top-center" />
       </body>
     </html>

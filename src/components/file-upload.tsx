@@ -25,6 +25,7 @@ export function FileUpload() {
 
       try {
         startTransition(async () => {
+          // TODO - Implement upload file content to AWS S3
           const data: any = await uploadToS3(file)
 
           if (!data?.file_key || !data.file_name) {

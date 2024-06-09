@@ -11,6 +11,7 @@ export const getPineconeClient = () => {
 export async function loadS3IntoPinecone(file_key: string) {
   console.log("downloading s3 into file system")
 
+  // TODO - Implement download from S3 bucket
   const file_name = await downloadFromS3(file_key)
   if (!file_name) {
     throw new Error("could not download from s3")
