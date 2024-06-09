@@ -16,8 +16,6 @@ import {
   DropdownMenuTrigger
 } from "@/components/common/dropdown-menu"
 import { Button } from "@/components/common/button"
-import { Label } from "@/components/common/label"
-import { Input } from "@/components/common/input"
 
 export function VariantTabs() {
   const { setTheme } = useTheme()
@@ -26,7 +24,7 @@ export function VariantTabs() {
       <div className="flex space-x-4">
         <TabsList>
           <TabsTrigger value="file">File</TabsTrigger>
-          <TabsTrigger value="mcqs">Mcqs</TabsTrigger>
+          <TabsTrigger value="mcqs">MCQs</TabsTrigger>
         </TabsList>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -50,10 +48,6 @@ export function VariantTabs() {
         </DropdownMenu>
       </div>
 
-      <div className="mt-8 py-4 px-1 max-w-md space-y-2">
-        <Label>Company Name</Label>
-        <Input placeholder="Type the brand name" />
-      </div>
       <TabsContent value="file" className="mt-6">
         <FileUploader />
       </TabsContent>
