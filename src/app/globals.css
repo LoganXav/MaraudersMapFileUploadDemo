@@ -2,32 +2,162 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
-}
-
-@media (prefers-color-scheme: dark) {
+@layer base {
   :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
+    --background: 0 0% 100%;
+    --foreground: 0, 0, 0%;
+
+    /* #8578E6; */
+    --primary: 252, 53%, 65%;
+
+    --primary-foreground: 34, 54%, 97%, 0.7;
+    --primary-background: 34, 54%, 97%, 0.6;
+
+    /* #F8F4F0; */
+    --secondary: 30, 64%, 96%;
+
+    /* #FCF9F5; */
+    --secondary-foreground: 30, 26%, 94%;
+
+    /* #FCF9F5; */
+    --tertiary: 30, 64%, 96%;
+
+    --destructive: 333, 60%, 65%, 0.2;
+    --destructive-foreground: 323, 34%, 44%;
+
+    --success: 152, 64%, 41%, 0.2;
+    --success-foreground: 150, 59%, 29%;
+
+    --info: 251, 68%, 71%, 0.2;
+    --info-foreground: 252, 31%, 54%;
+
+    --muted: 0, 0%, 80%;
+    /* hsla(36, 22%, 91%, .5) */
+    --pager-foreground: 36, 22%, 91%, 0.5;
+    /* hsla(38, 17%, 87%, .5) */
+    --pager-background: 38, 17%, 87%, 0.5;
+
+    --input: 0 0% 100%;
+    --input-invert: 0, 0, 0%;
+
+    --ring: 30, 23%, 92%;
+
+    --radius: 1.125rem;
+  }
+
+  .dark {
+    --background: 0, 0, 0%;
+    --foreground: 0 0% 100%;
+
+    /* #8578E6; */
+    --primary: 252, 53%, 65%;
+
+    --primary-foreground: 34, 54%, 97%, 0.7;
+
+    /* #32313B; */
+    --secondary: 255, 4%, 18%;
+
+    /* #222126; */
+    --secondary-foreground: 270, 4%, 13%;
+
+    /* #FCF9F5; */
+    --tertiary: 30, 64%, 96%;
+
+    --destructive: 323, 34%, 44%, 0.2;
+    --destructive-foreground: 330, 89%, 79%;
+
+    --success: 150, 59%, 29%, 0.2;
+    --success-foreground: 150, 43%, 65%;
+
+    --info: 252, 32%, 54%, 0.2;
+    --info-foreground: 252, 72%, 79%;
+
+    --ring: 30, 23%, 92%;
+
+    --input: 270, 4%, 13%;
+    --input-invert: 0, 0, 100%;
+
+    --muted: 0, 0%, 80%;
   }
 }
 
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
-}
+@media (prefers-color-scheme: dark) {
+  @layer base {
+    :root {
+      --background: 0 0% 100%;
+      --foreground: 0, 0, 0%;
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
+      /* #8578E6; */
+      --primary: 252, 53%, 65%;
+
+      --primary-foreground: 34, 54%, 97%, 0.7;
+      --primary-background: 34, 54%, 97%, 0.6;
+
+      /* #F8F4F0; */
+      --secondary: 30, 64%, 96%;
+
+      /* #FCF9F5; */
+      --secondary-foreground: 30, 26%, 94%;
+
+      /* #FCF9F5; */
+      --tertiary: 30, 64%, 96%;
+
+      --destructive: 333, 60%, 65%, 0.2;
+      --destructive-foreground: 323, 34%, 44%;
+
+      --success: 152, 64%, 41%, 0.2;
+      --success-foreground: 150, 59%, 29%;
+
+      --info: 251, 68%, 71%, 0.2;
+      --info-foreground: 252, 31%, 54%;
+
+      --muted: 0, 0%, 80%;
+      /* hsla(36, 22%, 91%, .5) */
+      --pager-foreground: 36, 22%, 91%, 0.5;
+      /* hsla(38, 17%, 87%, .5) */
+      --pager-background: 38, 17%, 87%, 0.5;
+
+      --input: 0 0% 100%;
+      --input-invert: 0, 0, 0%;
+
+      --ring: 30, 23%, 92%;
+
+      --radius: 1.125rem;
+    }
+
+    .dark {
+      --background: 0, 0, 0%;
+      --foreground: 0 0% 100%;
+
+      /* #8578E6; */
+      --primary: 252, 53%, 65%;
+
+      --primary-foreground: 34, 54%, 97%, 0.7;
+
+      /* #32313B; */
+      --secondary: 255, 4%, 18%;
+
+      /* #222126; */
+      --secondary-foreground: 270, 4%, 13%;
+
+      /* #FCF9F5; */
+      --tertiary: 30, 64%, 96%;
+
+      --destructive: 323, 34%, 44%, 0.2;
+      --destructive-foreground: 330, 89%, 79%;
+
+      --success: 150, 59%, 29%, 0.2;
+      --success-foreground: 150, 43%, 65%;
+
+      --info: 252, 32%, 54%, 0.2;
+      --info-foreground: 252, 72%, 79%;
+
+      --ring: 30, 23%, 92%;
+
+      --input: 270, 4%, 13%;
+      --input-invert: 0, 0, 100%;
+
+      --muted: 0, 0%, 80%;
+    }
   }
 }
