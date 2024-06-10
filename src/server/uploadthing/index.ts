@@ -3,7 +3,7 @@ import { revalidateTag } from "next/cache"
 import { createUploadthing } from "uploadthing/next"
 import type { FileRouter } from "uploadthing/next"
 
-// import { db } from "~/server/db";
+// import { db } from "@/server/db";
 // import { files } from "./db/schema";
 
 const f = createUploadthing({
@@ -35,8 +35,8 @@ export const uploadRouter = {
   //   })
   pdfUploader: f({
     pdf: {
-      maxFileSize: "10MB"
-    }
+      maxFileSize: "8MB"
+    },
   })
     .middleware(({ req }) => {
       // Check some condition based on the incoming requrest
