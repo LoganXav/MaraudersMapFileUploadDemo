@@ -7,58 +7,68 @@ import { Button } from "@/components/common/button"
 import { ArrowRightIcon } from "@radix-ui/react-icons"
 import { useCreateClientRecordMutation } from "@/server/react-query/client"
 // import { uploadToS3 } from "@/server/s3/client"
-import { useDropzone } from "react-dropzone"
 import { toast } from "sonner"
 import { Loader } from "lucide-react"
-import { uploadFiles } from "@/lib/uploadthing"
+import { useUploadFile } from "@/hooks/use-upload-file"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useForm } from "react-hook-form"
+import { z } from "zod"
+import { UploadedFilesCard } from "./uploaded-files-card"
+
+// const schema = z.object({
+//   images: z.array(z.instanceof(File))
+// })
+
+// type Schema = z.infer<typeof schema>
 
 export function FileUploader() {
   const [isPending, startTransition] = React.useTransition()
+  const [files, setFiles] = React.useState([])
 
   const { createClientRecord, isLoading, error } =
     useCreateClientRecordMutation()
 
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({
-    accept: { "application/pdf": [".pdf"] },
-    maxFiles: 1,
-    onDrop: (acceptedFiles) => {
-      const file = acceptedFiles[0]
-      if (file.size > 10 * 1024 * 1024) {
-        // larger than 10mb!
-        toast.error("File too large.")
-        return
-      }
+  const { uploadFiles, progresses, uploadedFiles, isUploading } = useUploadFile(
+    "pdfUploader",
+    { defaultUploadedFiles: [] }
+  )
 
-      try {
-        startTransition(async () => {
-          // TODO - Implement upload file content to  AWS S3
-          // const data: any = await uploadToS3(file)
-          // TODO - Implement upload file content to  Upload thing
-          const data: any = await uploadFiles("pdfUploader", file as any)
+  // const form = useForm<Schema>({
+  //   resolver: zodResolver(schema),
+  //   defaultValues: {
+  //     images: []
+  //   }
+  // })
 
-          console.log(data, "dataaaaaaaaa")
+  function handleSubmit(input: any) {
+    try {
+      startTransition(async () => {
+        // TODO - Implement upload file content to  AWS S3
+        // const data: any = await uploadToS3(file)
+        // TODO - Implement upload file content to  Upload thing
+        console.log(files, "files-----------")
+        const data: any = await uploadFiles(files as any)
+        console.log(data, "dataaaaaaaaa")
 
-          if (!data?.file_key || !data.file_name) {
-            toast.error("Something went wrong! Please try again.")
-            return
+        if (!data?.file_key || !data.file_name) {
+          toast.error("Something went wrong! Please try again.")
+          return
+        }
+
+        createClientRecord(data, {
+          onSuccess: () => {
+            toast.success("Client Record Created!")
+          },
+          onError: (error: any) => {
+            toast.error("Error Creating Client Record.")
+            console.error(error)
           }
-
-          createClientRecord(data, {
-            onSuccess: () => {
-              toast.success("Client Record Created!")
-            },
-            onError: (error: any) => {
-              toast.error("Error Creating Client Record.")
-              console.error(error)
-            }
-          })
         })
-      } catch (error) {
-        console.log(error)
-      }
-      toast.error("Error Uploading your file.")
+      })
+    } catch (error) {
+      console.log(error)
     }
-  })
+  }
 
   return (
     <div className="mt-16 space-y-8">
@@ -70,15 +80,14 @@ export function FileUploader() {
         />
       </div>
       <FileUpload
-        getRootProps={getRootProps}
-        getInputProps={getInputProps}
-        isDragActive={isDragActive}
+        files={files}
+        setFiles={setFiles}
         isPending={isPending}
         isLoading={isLoading}
       />
       <div className="flex">
         <div className="flex-1" />
-        <Button disabled={isPending || isLoading}>
+        <Button onClick={handleSubmit} disabled={isPending || isLoading}>
           Proceed{" "}
           {isPending || isLoading ? (
             <Loader className="animate-spin ml-1 w-4 h-4" />
@@ -87,6 +96,7 @@ export function FileUploader() {
           )}
         </Button>
       </div>
+      {/* <UploadedFilesCard uploadedFiles={files} /> */}
       <div>Uploaded files preview here</div>
     </div>
   )
