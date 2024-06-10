@@ -6,16 +6,29 @@ import { Input } from "@/components/common/input"
 import { Button } from "@/components/common/button"
 import { ArrowRightIcon } from "@radix-ui/react-icons"
 import { useCreateClientRecordMutation } from "@/server/react-query/client"
-import { uploadToS3 } from "@/server/s3/client"
+// import { uploadToS3 } from "@/server/s3/client"
 import { useDropzone } from "react-dropzone"
 import { toast } from "sonner"
 import { Loader } from "lucide-react"
+import { useUploadThing } from "@/lib/uploadthing"
 
 export function FileUploader() {
   const [isPending, startTransition] = React.useTransition()
 
   const { createClientRecord, isLoading, error } =
     useCreateClientRecordMutation()
+
+  const { startUpload } = useUploadThing("pdfUploader", {
+    onClientUploadComplete: () => {
+      alert("uploaded successfully!")
+    },
+    onUploadError: () => {
+      alert("error occurred while uploading")
+    },
+    onUploadBegin: () => {
+      alert("upload has begun")
+    }
+  })
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     accept: { "application/pdf": [".pdf"] },
@@ -30,8 +43,12 @@ export function FileUploader() {
 
       try {
         startTransition(async () => {
-          // TODO - Implement upload file content to AWS S3
-          const data: any = await uploadToS3(file)
+          // TODO - Implement upload file content to  AWS S3
+          // const data: any = await uploadToS3(file)
+          // TODO - Implement upload file content to  Upload thing
+          const data: any = await startUpload(file as any)
+
+          console.log(data, "dataaaaaaaaa")
 
           if (!data?.file_key || !data.file_name) {
             toast.error("Something went wrong! Please try again.")
@@ -51,6 +68,7 @@ export function FileUploader() {
       } catch (error) {
         console.log(error)
       }
+      toast.error("Error Uploading your file.")
     }
   })
 
