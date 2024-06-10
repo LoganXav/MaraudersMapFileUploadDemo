@@ -5,8 +5,8 @@ import { Label } from "@/components/common/label"
 import { Input } from "@/components/common/input"
 import { Button } from "@/components/common/button"
 import { ArrowRightIcon } from "@radix-ui/react-icons"
-import { useCreateClientRecordMutation } from "@/lib/react-query/client"
-import { uploadToS3 } from "@/lib/s3/client"
+import { useCreateClientRecordMutation } from "@/server/react-query/client"
+import { uploadToS3 } from "@/server/s3/client"
 import { useDropzone } from "react-dropzone"
 import { toast } from "sonner"
 import { Loader } from "lucide-react"
@@ -77,7 +77,7 @@ export function FileUploader() {
           {isPending || isLoading ? (
             <Loader className="animate-spin ml-1 w-4 h-4" />
           ) : (
-            <ArrowRightIcon className="ml-1" />
+            <ArrowRightIcon className="ml-1  w-4 h-4" />
           )}
         </Button>
       </div>
