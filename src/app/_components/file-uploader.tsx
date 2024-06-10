@@ -58,7 +58,10 @@ export function FileUploader() {
     <div className="mt-16 space-y-8">
       <div className="px-1 max-w-md space-y-2">
         <Label>Company Name</Label>
-        <Input placeholder="Type the brand name" />
+        <Input
+          disabled={isPending || isLoading}
+          placeholder="Type the brand name"
+        />
       </div>
       <FileUpload
         getRootProps={getRootProps}
