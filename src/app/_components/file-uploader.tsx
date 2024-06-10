@@ -10,25 +10,13 @@ import { useCreateClientRecordMutation } from "@/server/react-query/client"
 import { useDropzone } from "react-dropzone"
 import { toast } from "sonner"
 import { Loader } from "lucide-react"
-import { useUploadThing } from "@/lib/uploadthing"
+import { uploadFiles } from "@/lib/uploadthing"
 
 export function FileUploader() {
   const [isPending, startTransition] = React.useTransition()
 
   const { createClientRecord, isLoading, error } =
     useCreateClientRecordMutation()
-
-  const { startUpload } = useUploadThing("pdfUploader", {
-    onClientUploadComplete: () => {
-      alert("uploaded successfully!")
-    },
-    onUploadError: () => {
-      alert("error occurred while uploading")
-    },
-    onUploadBegin: () => {
-      alert("upload has begun")
-    }
-  })
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     accept: { "application/pdf": [".pdf"] },
@@ -46,7 +34,7 @@ export function FileUploader() {
           // TODO - Implement upload file content to  AWS S3
           // const data: any = await uploadToS3(file)
           // TODO - Implement upload file content to  Upload thing
-          const data: any = await startUpload(file as any)
+          const data: any = await uploadFiles("pdfUploader", file as any)
 
           console.log(data, "dataaaaaaaaa")
 
