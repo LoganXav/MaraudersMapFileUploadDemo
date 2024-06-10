@@ -6,98 +6,111 @@ import { Input } from "@/components/common/input"
 import { Button } from "@/components/common/button"
 import { ArrowRightIcon } from "@radix-ui/react-icons"
 import { useCreateClientRecordMutation } from "@/server/react-query/client"
-// import { uploadToS3 } from "@/server/s3/client"
+import { uploadToS3 } from "@/server/s3/client"
+import { useDropzone } from "react-dropzone"
 import { toast } from "sonner"
 import { Loader } from "lucide-react"
-import { useUploadFile } from "@/hooks/use-upload-file"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
-import { z } from "zod"
-import { UploadedFilesCard } from "./uploaded-files-card"
-
-// const schema = z.object({
-//   images: z.array(z.instanceof(File))
-// })
-
-// type Schema = z.infer<typeof schema>
 
 export function FileUploader() {
   const [isPending, startTransition] = React.useTransition()
-  const [files, setFiles] = React.useState([])
+  const [file, setFile] = React.useState<File | null>(null)
+  const [companyName, setCompanyName] = React.useState<string>("")
 
   const { createClientRecord, isLoading, error } =
     useCreateClientRecordMutation()
 
-  const { uploadFiles, progresses, uploadedFiles, isUploading } = useUploadFile(
-    "pdfUploader",
-    { defaultUploadedFiles: [] }
-  )
+  const onDrop = React.useCallback((acceptedFiles: File[]) => {
+    const file = acceptedFiles[0]
+    if (file.size > 10 * 1024 * 1024) {
+      // larger than 10mb!
+      toast.error("File too large. Please upload a smaller file")
+      return
+    }
+    setFile(file)
+  }, [])
 
-  // const form = useForm<Schema>({
-  //   resolver: zodResolver(schema),
-  //   defaultValues: {
-  //     images: []
-  //   }
-  // })
+  const handleRemoveFile = () => {
+    setFile(null)
+  }
 
-  function handleSubmit(input: any) {
+  const handleUpload = async () => {
+    if (!file) {
+      toast.error("No file selected")
+      return
+    }
+    if (!companyName) {
+      toast.error("Please type the name of the brand")
+      return
+    }
+
     try {
       startTransition(async () => {
-        // TODO - Implement upload file content to  AWS S3
-        // const data: any = await uploadToS3(file)
-        // TODO - Implement upload file content to  Upload thing
-        console.log(files, "files-----------")
-        const data: any = await uploadFiles(files as any)
-        console.log(data, "dataaaaaaaaa")
+        const data: any = await uploadToS3(file)
+        console.log(data, "data")
 
         if (!data?.file_key || !data.file_name) {
           toast.error("Something went wrong! Please try again.")
           return
         }
 
-        createClientRecord(data, {
+        const recordData = {
+          ...data,
+          company_name: companyName
+        }
+
+        createClientRecord(recordData, {
           onSuccess: () => {
-            toast.success("Client Record Created!")
+            toast.success("A new client record has created!")
           },
           onError: (error: any) => {
-            toast.error("Error Creating Client Record.")
+            toast.error("Error creating client record.")
             console.error(error)
           }
         })
       })
     } catch (error) {
-      console.log(error)
+      console.error(error)
+      toast.error("An error occured while uploading your brief.")
     }
   }
+
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    accept: { "application/pdf": [".pdf"] },
+    maxFiles: 1,
+    onDrop
+  })
 
   return (
     <div className="mt-16 space-y-8">
       <div className="px-1 max-w-md space-y-2">
         <Label>Company Name</Label>
         <Input
+          value={companyName}
+          onChange={(e) => setCompanyName(e.target.value)}
           disabled={isPending || isLoading}
           placeholder="Type the brand name"
         />
       </div>
       <FileUpload
-        files={files}
-        setFiles={setFiles}
+        getRootProps={getRootProps}
+        getInputProps={getInputProps}
+        isDragActive={isDragActive}
         isPending={isPending}
         isLoading={isLoading}
+        file={file}
+        onRemoveFile={handleRemoveFile}
       />
       <div className="flex">
         <div className="flex-1" />
-        <Button onClick={handleSubmit} disabled={isPending || isLoading}>
+        <Button disabled={isPending || isLoading} onClick={handleUpload}>
           Proceed{" "}
           {isPending || isLoading ? (
             <Loader className="animate-spin ml-1 w-4 h-4" />
           ) : (
-            <ArrowRightIcon className="ml-1  w-4 h-4" />
+            <ArrowRightIcon className="ml-1 w-4 h-4" />
           )}
         </Button>
       </div>
-      {/* <UploadedFilesCard uploadedFiles={files} /> */}
-      <div>Uploaded files preview here</div>
     </div>
   )
 }

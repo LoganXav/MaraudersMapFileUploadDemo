@@ -26,6 +26,7 @@ export function useUploadFile(
 
   async function uploadThings(files: File[]) {
     setIsUploading(true)
+    console.log("is uploading")
     try {
       const res = await uploadFiles(endpoint, {
         ...props,
@@ -43,6 +44,7 @@ export function useUploadFile(
       setUploadedFiles((prev) => (prev ? [...prev, ...res] : res))
     } catch (err) {
       //   toast.error(getErrorMessage(err))
+      console.log("error while uploading")
       console.log(err)
     } finally {
       setProgresses({})
