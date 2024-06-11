@@ -1,7 +1,7 @@
 import { db } from "@/server/neon"
 import { clients } from "@/server/neon/schema"
 import { loadS3IntoPinecone } from "@/server/pinecone/client"
-import { getS3Url } from "@/server/s3/client"
+import { getS3Url } from "@/server/s3/upload"
 import { NextResponse } from "next/server"
 
 export async function POST(req: Request, res: Response) {

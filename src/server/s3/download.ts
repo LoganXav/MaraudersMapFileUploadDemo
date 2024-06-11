@@ -1,5 +1,6 @@
 import { S3 } from "@aws-sdk/client-s3"
 import fs from "fs"
+import path from "path"
 
 export const downloadFromS3 = async (file_key: string): Promise<string> => {
   return new Promise(async (resolve, reject) => {
@@ -17,7 +18,17 @@ export const downloadFromS3 = async (file_key: string): Promise<string> => {
         Key: file_key
       }
       const obj = await s3.getObject(params)
-      const file_name = `/tmp/marauders${Date.now().toString()}.pdf`
+      const file_name = path.join(
+        "C:",
+        "tmp",
+        `marauders${Date.now().toString()}.pdf`
+      )
+
+      // Ensure the directory exists
+      const dir = path.dirname(file_name)
+      if (!fs.existsSync(dir)) {
+        fs.mkdirSync(dir, { recursive: true })
+      }
 
       if (obj.Body instanceof require("stream").Readable) {
         // AWS-SDK v3 has some issues with their typescript definitions, but this works
