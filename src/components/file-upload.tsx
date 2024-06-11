@@ -21,11 +21,12 @@ export function FileUpload(props: any) {
       {file ? (
         <Card className="relative p-4 border-input">
           <Button
-            className="absolute top-2 right-2 h-6 w-6 rounded-full"
+            className="absolute top-2 right-2 p-1 h-5 w-5 rounded-full"
             size="icon"
             onClick={onRemoveFile}
+            disabled={isPending || isLoading}
           >
-            <Cross1Icon aria-hidden="true" />
+            <Cross1Icon className="" aria-hidden="true" />
           </Button>
           <div className="flex items-center space-x-4">
             <div className="shrink-0">
