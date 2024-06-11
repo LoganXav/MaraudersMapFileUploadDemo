@@ -6,7 +6,7 @@ import { Input } from "@/components/common/input"
 import { Button } from "@/components/common/button"
 import { ArrowRightIcon } from "@radix-ui/react-icons"
 import { useCreateClientRecordMutation } from "@/server/react-query/client"
-import { uploadToS3 } from "@/server/s3/client"
+import { uploadToS3 } from "@/server/s3/upload"
 import { useDropzone } from "react-dropzone"
 import { toast } from "sonner"
 import { Loader } from "lucide-react"
@@ -55,7 +55,7 @@ export function FileUploader() {
 
         const recordData = {
           ...data,
-          company_name: companyName
+          client_name: companyName
         }
 
         createClientRecord(recordData, {
