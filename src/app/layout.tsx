@@ -21,7 +21,7 @@ export default function RootLayout({
         )}
       >
         <AppProviders>
-          <main className="container pt-8">{children}</main>
+          <main className="relative min-h-screen">{children}</main>
         </AppProviders>
         <Toaster position="top-center" />
       </body>

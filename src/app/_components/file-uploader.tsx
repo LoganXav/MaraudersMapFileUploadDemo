@@ -10,8 +10,10 @@ import { uploadToS3 } from "@/server/s3/upload"
 import { useDropzone } from "react-dropzone"
 import { toast } from "sonner"
 import { Loader } from "lucide-react"
+import { useRouter } from "next/navigation"
 
 export function FileUploader() {
+  const router = useRouter()
   const [isPending, startTransition] = React.useTransition()
   const [file, setFile] = React.useState<File | null>(null)
   const [companyName, setCompanyName] = React.useState<string>("")
@@ -46,7 +48,6 @@ export function FileUploader() {
     try {
       startTransition(async () => {
         const data: any = await uploadToS3(file)
-        console.log(data, "data")
 
         if (!data?.file_key || !data.file_name) {
           toast.error("Something went wrong! Please try again.")
@@ -59,8 +60,10 @@ export function FileUploader() {
         }
 
         createClientRecord(recordData, {
-          onSuccess: () => {
-            toast.success("A new client record has created!")
+          onSuccess: ({ client_id }) => {
+            toast.success("A new client record has been created!")
+
+            router.push(`/brief/${client_id}`)
           },
           onError: (error: any) => {
             toast.error("Error creating client record.")

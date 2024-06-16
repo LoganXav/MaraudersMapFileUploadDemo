@@ -76,8 +76,6 @@ async function prepareDocument(page: any) {
 async function embedDocument(doc: Document) {
   try {
     const embeddings = await getEmbeddings(doc.pageContent)
-
-    console.log(embeddings, "embeddings==========================")
     const hash = md5(doc.pageContent)
 
     return {

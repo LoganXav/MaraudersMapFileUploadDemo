@@ -22,7 +22,6 @@ export async function uploadToS3(
         Body: file
       }
 
-      console.log(params, "params")
       s3.putObject(
         params,
         (err: any, data: PutObjectCommandOutput | undefined) => {

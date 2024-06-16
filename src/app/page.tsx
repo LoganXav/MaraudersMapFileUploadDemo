@@ -3,7 +3,7 @@ import { VariantTabs } from "./_components/variant-tabs"
 
 export default function Home() {
   return (
-    <Shell>
+    <Shell className="container">
       <VariantTabs />
     </Shell>
   )

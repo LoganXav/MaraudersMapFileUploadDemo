@@ -1,6 +1,6 @@
 import { db } from "@/server/neon"
 import { clients } from "@/server/neon/schema"
-import { loadS3IntoPinecone } from "@/server/pinecone/client"
+import { loadS3IntoPinecone } from "@/server/pinecone"
 import { getS3Url } from "@/server/s3/upload"
 import { NextResponse } from "next/server"
 

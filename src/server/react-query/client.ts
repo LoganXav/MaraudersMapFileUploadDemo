@@ -16,13 +16,34 @@ export const useCreateClientRecordMutation = () => {
     error
   } = useMutation({
     mutationFn: async (payload: createClientRecordProps) => {
-      const { data } = await axios.post("/api/client/create", payload)
+      const data = await axios.post("/api/client/create", payload)
+
       if (data?.status !== 200) {
-        throw data?.error
+        throw Error()
       }
-      return data
+      return data.data
     }
   })
 
   return { createClientRecord, isLoading, error }
+}
+
+export const useAssignStaffMutation = (onSuccess: any) => {
+  const {
+    mutate: assignStaff,
+    isLoading,
+    error
+  } = useMutation({
+    mutationFn: async (payload: { clientId: number | string }) => {
+      const data = await axios.post("/api/client/assign", payload)
+
+      if (data?.status !== 200) {
+        throw Error()
+      }
+      return data.data
+    },
+    onSuccess
+  })
+
+  return { assignStaff, isLoading, error }
 }
