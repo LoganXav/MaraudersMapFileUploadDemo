@@ -2,7 +2,6 @@ import { eq } from "drizzle-orm"
 import { NextResponse } from "next/server"
 import { db } from "@/server/neon"
 import { clients, staff } from "@/server/neon/schema"
-import { getContext } from "@/server/context"
 import {
   CLIENT_RECORD,
   INTERNAL_SERVER_ERROR,
@@ -11,6 +10,7 @@ import {
 import { httpStatusCodesEnums } from "@/lib/status-codes-enums"
 import { assignPrompt } from "@/lib/prompts"
 import { openai } from "@/server/openai"
+import { getContext } from "@/server/embeddings"
 
 export const runtime = "edge"
 

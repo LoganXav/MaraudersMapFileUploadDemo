@@ -4,6 +4,7 @@ export const INTERNAL_SERVER_ERROR = "Internal server error"
 // Resource Names
 export const CLIENT_NAME = "Client name"
 export const CLIENT_RECORD = "Client record"
+export const DATABASE_URL = "Database url"
 
 // Generic Errors
 export const SOMETHING_WENT_WRONG = "Something went wrong! Please try again."

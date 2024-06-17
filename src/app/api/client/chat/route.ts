@@ -3,7 +3,6 @@ import { eq } from "drizzle-orm"
 import { NextResponse } from "next/server"
 import { db } from "@/server/neon"
 import { clients } from "@/server/neon/schema"
-import { getContext } from "@/server/context"
 import { chatPrompt } from "@/lib/prompts"
 import {
   CLIENT_RECORD,
@@ -12,6 +11,7 @@ import {
 } from "@/lib/system-messages"
 import { httpStatusCodesEnums } from "@/lib/status-codes-enums"
 import { openai } from "@/server/openai"
+import { getContext } from "@/server/embeddings"
 
 export const runtime = "edge"
 

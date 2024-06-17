@@ -56,6 +56,26 @@ export async function loadS3IntoPinecone(file_key: string) {
   }
 }
 
+export async function getMatchesFromEmbeddings(
+  embeddings: number[],
+  fileKey: string
+) {
+  try {
+    const client = getPineconeClient()
+    const pineconeIndex = client.index("clients")
+    const namespace = pineconeIndex.namespace(convertToAscii(fileKey))
+    const queryResult = await namespace.query({
+      topK: 5,
+      vector: embeddings,
+      includeMetadata: true
+    })
+    return queryResult.matches || []
+  } catch (error) {
+    console.log("error querying embeddings", error)
+    throw error
+  }
+}
+
 async function prepareDocument(page: any) {
   let { pageContent, metadata } = page
   pageContent = pageContent.replace(/\n/g, "")
