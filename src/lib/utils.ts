@@ -17,6 +17,11 @@ export const parseNamesFromString = (namesString: string) => {
   return namesString.split(",").map((name) => name.trim())
 }
 
+export const truncateStringByBytes = (str: string, bytes: number) => {
+  const enc = new TextEncoder()
+  return new TextDecoder("utf-8").decode(enc.encode(str).slice(0, bytes))
+}
+
 export function convertToAscii(inputString: string) {
   // remove non ascii characters
   const asciiString = inputString.replace(/[^\x00-\x7F]+/g, "")

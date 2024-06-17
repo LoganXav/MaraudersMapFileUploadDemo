@@ -1,21 +1,18 @@
-import {
-  ChatCompletionRequestMessageRoleEnum,
-  Configuration,
-  OpenAIApi
-} from "openai-edge"
-import { Message, OpenAIStream, StreamingTextResponse } from "ai"
 import { eq } from "drizzle-orm"
 import { NextResponse } from "next/server"
 import { db } from "@/server/neon"
 import { clients, staff } from "@/server/neon/schema"
 import { getContext } from "@/server/context"
+import {
+  CLIENT_RECORD,
+  INTERNAL_SERVER_ERROR,
+  resourceMissingError
+} from "@/lib/system-messages"
+import { httpStatusCodesEnums } from "@/lib/status-codes-enums"
+import { assignPrompt } from "@/lib/prompts"
+import { openai } from "@/server/openai"
 
 export const runtime = "edge"
-
-const config = new Configuration({
-  apiKey: process.env.OPENAI_API_KEY
-})
-const openai = new OpenAIApi(config)
 
 export async function POST(req: Request) {
   try {
@@ -27,42 +24,23 @@ export async function POST(req: Request) {
       .where(eq(clients.id, clientId))
     if (_client.length !== 1) {
       return NextResponse.json(
-        { error: "Client Record not found" },
-        { status: 404 }
+        { error: resourceMissingError(CLIENT_RECORD) },
+        { status: httpStatusCodesEnums.NOT_FOUND }
       )
     }
     const fileKey = _client[0].fileKey
     const context = await getContext("Summarize the entire brief", fileKey)
 
-    console.log(context, "context")
-
-    // Fetch the staff data from the database
     const _staff = await db.select().from(staff)
-
-    const staffInfo = _staff.map((member) => ({
+    const staffInfoRecord = _staff.map((member) => ({
       name: `${member.firstName} ${member.lastName}`,
       department: member.department,
       skills: member.skills
     }))
 
-    const staffInfoString = JSON.stringify(staffInfo)
+    const staffInfo = JSON.stringify(staffInfoRecord)
 
-    const prompt = {
-      role: "system",
-      content: `AI assistant is a brand new, powerful, human-like artificial intelligence.
-      AI assistant will play an important role of assigning staff members to work on a client pitch given a brief document.
-      AI assistant will analyze the client briefs and identify the skills needed to generate th pitch.
-      [Brief Context Starts Here]
-      ${context}
-      [Brief Context Ends Here]
-      Here is the list of staff and their skills:
-      ${staffInfoString}
-      
-      Match the skills needed for the pitch to the skills of the fetched staff members.
-      NOTE - AI assistant will choose exactly one staff member from each distinct department whose skills best match the skills needed for the pitch.
-      AI assistant will return only the names of these staff members as a single string.
-      `
-    }
+    const prompt = assignPrompt(context, staffInfo)
 
     const response = await openai.createChatCompletion({
       model: "gpt-3.5-turbo",
@@ -75,6 +53,9 @@ export async function POST(req: Request) {
     return NextResponse.json({ result })
   } catch (error) {
     console.error(error)
-    return NextResponse.json({ error: "An error occurred" }, { status: 500 })
+    return NextResponse.json(
+      { error: INTERNAL_SERVER_ERROR },
+      { status: httpStatusCodesEnums.INTERNAL_SERVER_ERROR }
+    )
   }
 }

@@ -12,6 +12,7 @@ export const SOMETHING_WENT_WRONG = "Something went wrong! Please try again."
 export const FILE_TOO_LARGE_ERROR =
   "File too large. Please upload a smaller file."
 export const FILE_MISSING_ERROR = "No file selected."
+export const FILE_DOWNLOAD_ERROR = "Could not download file."
 
 export function resourceCreationSuccess(resource: string) {
   return `A new ${resource} has been created.`
@@ -22,5 +23,5 @@ export function resourceCreationError(resource: string) {
 }
 
 export function resourceMissingError(resource: string) {
-  return `${resource} missing.`
+  return `${resource} not found.`
 }

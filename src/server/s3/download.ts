@@ -44,7 +44,6 @@ export const downloadFromS3 = async (file_key: string): Promise<string> => {
         // obj.Body?.pipe(fs.createWriteStream(file_name));
       }
     } catch (error) {
-      console.error(error)
       reject(error)
     }
   })

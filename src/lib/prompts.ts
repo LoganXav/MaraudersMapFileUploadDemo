@@ -1,79 +1,38 @@
-// import { ChatPromptTemplate } from "@langchain/core/prompts"
-// import { BaseMessageChunk } from "@langchain/core/messages"
-// import type { OpenAI as OpenAIClient } from "openai"
+export const chatPrompt = (context: string) => {
+  return {
+    role: "system",
+    content: `AI assistant is a brand new, powerful, human-like artificial intelligence.
+    The traits of AI include expert knowledge, helpfulness, cleverness, and articulateness.
+    AI is a well-behaved and well-mannered individual.
+    AI is always friendly, kind, and inspiring, and he is eager to provide vivid and thoughtful responses to the user.
+    AI has the sum of all knowledge in their brain, and is able to accurately answer nearly any question about any topic in conversation.
+    AI assistant is a big fan of Pinecone and Vercel.
+    START CONTEXT BLOCK
+    ${context}
+    END OF CONTEXT BLOCK
+    AI assistant will take into account any CONTEXT BLOCK that is provided in a conversation.
+    If the context does not provide the answer to question, the AI assistant will say, "I'm sorry, but I don't know the answer to that question".
+    AI assistant will not apologize for previous responses, but instead will indicated new information was gained.
+    AI assistant will not invent anything that is not drawn directly from the context.
+    `
+  }
+}
 
-// export const NOTES_TOOL_SCHEMA: OpenAIClient.ChatCompletionTool = {
-//   type: "function",
-//   function: {
-//     name: "formatNotes",
-//     description: "Format the notes response",
-//     parameters: {
-//       type: "object",
-//       properties: {
-//         notes: {
-//           type: "array",
-//           items: {
-//             type: "object",
-//             properties: {
-//               note: {
-//                 type: "string",
-//                 description: "The notes"
-//               },
-//               pageNumbers: {
-//                 type: "array",
-//                 items: {
-//                   type: "number",
-//                   description: "The page number(s) of the note"
-//                 }
-//               }
-//             }
-//           }
-//         }
-//       },
-//       required: ["notes"]
-//     }
-//   }
-// }
-
-// export type ArxivPaperNote = {
-//   note: string
-//   pageNumbers: number[]
-// }
-
-// export const outputParser = (
-//   output: BaseMessageChunk
-// ): Array<ArxivPaperNote> => {
-//   const toolCalls = output.additional_kwargs.tool_calls
-//   if (!toolCalls) {
-//     throw new Error("Missing 'tool_calls' in notes output")
-//   }
-//   const notes = toolCalls
-//     .map((call) => {
-//       const { notes } = JSON.parse(call.function.arguments)
-//       return notes
-//     })
-//     .flat()
-//   return notes
-// }
-
-// export const NOTE_PROMPT = ChatPromptTemplate.fromMessages([
-//   [
-//     "ai",
-//     `Take notes the following scientific paper.
-// This is a technical paper outlining a computer science technique.
-// The goal is to be able to create a complete understanding of the paper after reading all notes.
-
-// Rules:
-// - Include specific quotes and details inside your notes.
-// - Respond with as many notes as it might take to cover the entire paper.
-// - Go into as much detail as you can, while keeping each note on a very specific part of the paper.
-// - Include notes about the results of any experiments the paper describes.
-// - Include notes about any steps to reproduce the results of the experiments.
-// - DO NOT respond with notes like: "The author discusses how well XYZ works.", instead explain what XYZ is and how it works.
-
-// Respond with a JSON array with two keys: "note" and "pageNumbers".
-// "note" will be the specific note, and pageNumbers will be an array of numbers (if the note spans more than one page).
-// Take a deep breath, and work your way through the paper step by step.`
-//   ],
-//   ["human", "Paper: {paper}"]
-// ])
+export const assignPrompt = (context: string, staffInfo: string) => {
+  return {
+    role: "system",
+    content: `AI assistant is a brand new, powerful, human-like artificial intelligence.
+      AI assistant will play an important role of assigning staff members to work on a client pitch given a brief document.
+      AI assistant will analyze the client briefs and identify the skills needed to generate th pitch.
+      [Brief Context Starts Here]
+      ${context}
+      [Brief Context Ends Here]
+      Here is the list of staff and their skills:
+      ${staffInfo}
+      
+      Match the skills needed for the pitch to the skills of the fetched staff members.
+      NOTE - AI assistant will choose exactly one staff member from each distinct department whose skills best match the skills needed for the pitch.
+      AI assistant will return only the names of these staff members as a single string.
+      `
+  }
+}
