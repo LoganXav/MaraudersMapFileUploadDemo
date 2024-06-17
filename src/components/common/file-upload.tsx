@@ -3,7 +3,7 @@ import { Cross1Icon, ImageIcon } from "@radix-ui/react-icons"
 import { cn } from "@/lib/utils"
 import { Card, CardDescription, CardTitle } from "@/components/common/card"
 import React from "react"
-import { Button } from "./common/button"
+import { Button } from "./button"
 
 export function FileUpload(props: any) {
   const {

@@ -1,18 +1,28 @@
 "use client"
 import React from "react"
-import { FileUpload } from "@/components/file-upload"
+import { FileUpload } from "@/components/common/file-upload"
 import { Label } from "@/components/common/label"
 import { Input } from "@/components/common/input"
 import { Button } from "@/components/common/button"
 import { ArrowRightIcon } from "@radix-ui/react-icons"
-import { useCreateClientRecordMutation } from "@/server/react-query/client"
+import { useCreateClientRecordMutation } from "@/server/react-query"
 import { uploadToS3 } from "@/server/s3/upload"
 import { useDropzone } from "react-dropzone"
-import { toast } from "sonner"
 import { Loader } from "lucide-react"
 import { useRouter } from "next/navigation"
+import {
+  CLIENT_NAME,
+  CLIENT_RECORD,
+  FILE_MISSING_ERROR,
+  FILE_TOO_LARGE_ERROR,
+  SOMETHING_WENT_WRONG,
+  resourceCreationError,
+  resourceCreationSuccess,
+  resourceMissingError
+} from "@/lib/system-messages"
+import { toastErrorMessage, toastSuccessMessage } from "@/lib/utils"
 
-export function FileUploader() {
+export function UploadBriefForm() {
   const router = useRouter()
   const [isPending, startTransition] = React.useTransition()
   const [file, setFile] = React.useState<File | null>(null)
@@ -25,7 +35,7 @@ export function FileUploader() {
     const file = acceptedFiles[0]
     if (file.size > 10 * 1024 * 1024) {
       // larger than 10mb!
-      toast.error("File too large. Please upload a smaller file")
+      toastErrorMessage(FILE_TOO_LARGE_ERROR)
       return
     }
     setFile(file)
@@ -37,11 +47,11 @@ export function FileUploader() {
 
   const handleUpload = async () => {
     if (!file) {
-      toast.error("No file selected")
+      toastErrorMessage(FILE_MISSING_ERROR)
       return
     }
     if (!companyName) {
-      toast.error("Please type the name of the brand")
+      toastErrorMessage(resourceMissingError(CLIENT_NAME))
       return
     }
 
@@ -50,7 +60,7 @@ export function FileUploader() {
         const data: any = await uploadToS3(file)
 
         if (!data?.file_key || !data.file_name) {
-          toast.error("Something went wrong! Please try again.")
+          toastErrorMessage(SOMETHING_WENT_WRONG)
           return
         }
 
@@ -61,19 +71,19 @@ export function FileUploader() {
 
         createClientRecord(recordData, {
           onSuccess: ({ client_id }) => {
-            toast.success("A new client record has been created!")
+            toastSuccessMessage(resourceCreationSuccess(CLIENT_RECORD))
 
-            router.push(`/brief/${client_id}`)
+            router.push(`/client/${client_id}`)
           },
-          onError: (error: any) => {
-            toast.error("Error creating client record.")
+          onError: (error) => {
+            toastErrorMessage(resourceCreationError(CLIENT_RECORD))
             console.error(error)
           }
         })
       })
     } catch (error) {
       console.error(error)
-      toast.error("An error occured while uploading your brief.")
+      toastErrorMessage(SOMETHING_WENT_WRONG)
     }
   }
 

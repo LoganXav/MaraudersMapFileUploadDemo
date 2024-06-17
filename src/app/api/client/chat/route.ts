@@ -13,11 +13,6 @@ const config = new Configuration({
 })
 const openai = new OpenAIApi(config)
 
-// Fetch the staff
-// Tell the llm to recognize the staff skills needed to work on generating a pitch to the brand
-// pass the staff to the llm along with their skills and ask the llm to choose with one staff member from every department whose skill best matches the skills needed for the pitch
-// NOTE - only return the names of these staff members
-
 export async function POST(req: Request) {
   try {
     const { messages, clientId } = await req.json()

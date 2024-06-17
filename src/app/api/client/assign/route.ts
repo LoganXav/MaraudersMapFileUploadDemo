@@ -32,7 +32,9 @@ export async function POST(req: Request) {
       )
     }
     const fileKey = _client[0].fileKey
-    const context = await getContext("Generate a pitch for the client", fileKey)
+    const context = await getContext("Summarize the entire brief", fileKey)
+
+    console.log(context, "context")
 
     // Fetch the staff data from the database
     const _staff = await db.select().from(staff)
@@ -42,8 +44,6 @@ export async function POST(req: Request) {
       department: member.department,
       skills: member.skills
     }))
-
-    console.log(staffInfo, "staffInfo")
 
     const staffInfoString = JSON.stringify(staffInfo)
 

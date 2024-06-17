@@ -1,17 +1,16 @@
-import ChatComponent from "@/app/_components/chat-component"
-import PDFViewer from "@/app/_components/pdf-viewer"
-import { Textarea } from "@/components/common/textarea"
+import BriefChat from "@/components/chat/brief-chat"
+import PDFViewer from "@/components/common/pdf-viewer"
 import { db } from "@/server/neon"
 import { clients } from "@/server/neon/schema"
 import { eq } from "drizzle-orm"
 
-type Props = {
+type PageProps = {
   params: {
     clientId: string
   }
 }
 
-export default async function BriefPage({ params }: Props) {
+export default async function BriefPage({ params }: PageProps) {
   const { clientId } = params
   const clientIdInt = parseInt(clientId, 10)
 
@@ -20,15 +19,13 @@ export default async function BriefPage({ params }: Props) {
     .from(clients)
     .where(eq(clients.id, clientIdInt))
 
-  console.log(_client, "_client")
-
   return (
     <div className="grid lg:grid-cols-3 min-h-screen w-full">
       <div className="p-4 lg:col-span-1 min-h-[50vh] oveflow-scroll h-full">
-        <PDFViewer pdfUrl={_client[0]?.pdfUrl || ""} />
+        <PDFViewer pdfUrl={_client[0]?.pdfUrl} />
       </div>
       <div className="lg:col-span-2 h-full">
-        <ChatComponent clientId={clientIdInt} />
+        <BriefChat clientId={clientIdInt} />
       </div>
     </div>
   )

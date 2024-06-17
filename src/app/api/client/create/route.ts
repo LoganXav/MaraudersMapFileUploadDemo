@@ -1,3 +1,5 @@
+import { httpStatusCodesEnums } from "@/lib/status-codes-enums"
+import { INTERNAL_SERVER_ERROR } from "@/lib/system-messages"
 import { db } from "@/server/neon"
 import { clients } from "@/server/neon/schema"
 import { loadS3IntoPinecone } from "@/server/pinecone"
@@ -26,13 +28,13 @@ export async function POST(req: Request, res: Response) {
       {
         client_id: client_id[0].insertedId
       },
-      { status: 200 }
+      { status: httpStatusCodesEnums.CREATED }
     )
   } catch (error) {
     console.error(error)
     return NextResponse.json(
-      { error: "Internal server error" },
-      { status: 500 }
+      { error: INTERNAL_SERVER_ERROR },
+      { status: httpStatusCodesEnums.INTERNAL_SERVER_ERROR }
     )
   }
 }

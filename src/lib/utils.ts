@@ -1,4 +1,5 @@
 import { clsx, type ClassValue } from "clsx"
+import { toast } from "sonner"
 import { twMerge } from "tailwind-merge"
 
 export function cn(...inputs: ClassValue[]) {
@@ -12,8 +13,24 @@ export function toTitleCase(str: string) {
   )
 }
 
+export const parseNamesFromString = (namesString: string) => {
+  return namesString.split(",").map((name) => name.trim())
+}
+
 export function convertToAscii(inputString: string) {
   // remove non ascii characters
   const asciiString = inputString.replace(/[^\x00-\x7F]+/g, "")
   return asciiString
+}
+
+export function toastErrorMessage(message: string) {
+  return toast.error(message)
+}
+
+export function toastSuccessMessage(message: string) {
+  return toast.success(message)
+}
+
+export function toastInfoMessage(message: string) {
+  return toast.info(message)
 }

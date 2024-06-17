@@ -1,13 +1,6 @@
 import axios from "axios"
 import { useMutation } from "react-query"
-
-interface createClientRecordProps {
-  payload: {
-    client_name: string
-    file_key: string
-    file_name: string
-  }
-}
+import { assignStaffArgsType, createClientRecordArgsType } from "../types"
 
 export const useCreateClientRecordMutation = () => {
   const {
@@ -15,7 +8,7 @@ export const useCreateClientRecordMutation = () => {
     isLoading,
     error
   } = useMutation({
-    mutationFn: async (payload: createClientRecordProps) => {
+    mutationFn: async (payload: createClientRecordArgsType) => {
       const data = await axios.post("/api/client/create", payload)
 
       if (data?.status !== 200) {
@@ -28,18 +21,21 @@ export const useCreateClientRecordMutation = () => {
   return { createClientRecord, isLoading, error }
 }
 
-export const useAssignStaffMutation = (onSuccess: any) => {
+export const useAssignStaffMutation = (
+  onSuccess: (data: { result: string }) => void
+) => {
   const {
     mutate: assignStaff,
     isLoading,
     error
   } = useMutation({
-    mutationFn: async (payload: { clientId: number | string }) => {
+    mutationFn: async (payload: assignStaffArgsType) => {
       const data = await axios.post("/api/client/assign", payload)
 
       if (data?.status !== 200) {
         throw Error()
       }
+
       return data.data
     },
     onSuccess
