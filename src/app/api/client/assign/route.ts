@@ -12,8 +12,6 @@ import { assignPrompt } from "@/lib/prompts"
 import { openai } from "@/server/openai"
 import { getContext } from "@/server/embeddings"
 
-export const runtime = "edge"
-
 export async function POST(req: Request) {
   try {
     const { clientId } = await req.json()

@@ -13,8 +13,6 @@ import { httpStatusCodesEnums } from "@/lib/status-codes-enums"
 import { openai } from "@/server/openai"
 import { getContext } from "@/server/embeddings"
 
-export const runtime = "edge"
-
 export async function POST(req: Request) {
   try {
     const { messages, clientId } = await req.json()
