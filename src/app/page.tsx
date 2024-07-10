@@ -12,7 +12,7 @@ import { McqForm } from "@/components/forms/mcq-form"
 export default function Home() {
   return (
     <Shell className="container">
-      <Tabs defaultValue="file" className="w-fulloverflow-hidden">
+      <Tabs defaultValue="file" className="w-full overflow-hidden">
         <div className="flex space-x-4">
           <TabsList>
             <TabsTrigger value="file">File</TabsTrigger>

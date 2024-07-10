@@ -69,6 +69,8 @@ export function UploadBriefForm() {
           client_name: companyName
         }
 
+        console.log(recordData, "recordData")
+
         createClientRecord(recordData, {
           onSuccess: ({ client_id }) => {
             toastSuccessMessage(resourceCreationSuccess(CLIENT_RECORD))

@@ -1,6 +1,7 @@
 import axios from "axios"
 import { useMutation } from "react-query"
 import { assignStaffArgsType, createClientRecordArgsType } from "../types"
+import { Console } from "console"
 
 export const useCreateClientRecordMutation = () => {
   const {
@@ -10,8 +11,9 @@ export const useCreateClientRecordMutation = () => {
   } = useMutation({
     mutationFn: async (payload: createClientRecordArgsType) => {
       const data = await axios.post("/api/client/create", payload)
+      console.log(data, "CreateClientMutation Data");
 
-      if (data?.status !== 200) {
+      if (data?.status !== 201) {
         throw Error()
       }
       return data.data
