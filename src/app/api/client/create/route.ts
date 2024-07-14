@@ -12,6 +12,7 @@ export async function POST(req: Request, res: Response) {
     const { client_name, file_key, file_name } = body;
 
     await loadS3IntoPinecone(file_key);
+
     const client_id = await db
       .insert(clients)
       .values({
@@ -28,13 +29,10 @@ export async function POST(req: Request, res: Response) {
       {
         client_id: client_id[0].insertedId,
       },
-      { status: httpStatusCodesEnums.CREATED },
+      { status: httpStatusCodesEnums.CREATED }
     );
   } catch (error) {
     console.error(error);
-    return NextResponse.json(
-      { error: INTERNAL_SERVER_ERROR },
-      { status: httpStatusCodesEnums.INTERNAL_SERVER_ERROR },
-    );
+    return NextResponse.json({ error: INTERNAL_SERVER_ERROR, message: error }, { status: httpStatusCodesEnums.INTERNAL_SERVER_ERROR });
   }
 }
