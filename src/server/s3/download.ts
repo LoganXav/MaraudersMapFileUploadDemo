@@ -1,6 +1,6 @@
-import { S3 } from "@aws-sdk/client-s3"
-import fs from "fs"
-import path from "path"
+import { S3 } from "@aws-sdk/client-s3";
+import fs from "fs";
+import path from "path";
 
 export const downloadFromS3 = async (file_key: string): Promise<string> => {
   return new Promise(async (resolve, reject) => {
@@ -9,42 +9,38 @@ export const downloadFromS3 = async (file_key: string): Promise<string> => {
         region: "us-east-1",
         credentials: {
           accessKeyId: process.env.NEXT_PUBLIC_S3_ACCESS_KEY_ID!,
-          secretAccessKey: process.env.NEXT_PUBLIC_S3_SECRET_ACCESS_KEY!
-        }
-      })
+          secretAccessKey: process.env.NEXT_PUBLIC_S3_SECRET_ACCESS_KEY!,
+        },
+      });
 
       const params = {
         Bucket: process.env.NEXT_PUBLIC_S3_BUCKET_NAME!,
-        Key: file_key
-      }
-      const obj = await s3.getObject(params)
-      const file_name = path.join(
-        "C:",
-        "tmp",
-        `marauders${Date.now().toString()}.pdf`
-      )
+        Key: file_key,
+      };
+      const obj = await s3.getObject(params);
+      const file_name = path.join(`/tmp/marauders${Date.now().toString()}.pdf`);
 
       // Ensure the directory exists
-      const dir = path.dirname(file_name)
-      if (!fs.existsSync(dir)) {
-        fs.mkdirSync(dir, { recursive: true })
-      }
+      // const dir = path.dirname(file_name)
+      // if (!fs.existsSync(dir)) {
+      //   fs.mkdirSync(dir, { recursive: true })
+      // }
 
       if (obj.Body instanceof require("stream").Readable) {
         // AWS-SDK v3 has some issues with their typescript definitions, but this works
         // https://github.com/aws/aws-sdk-js-v3/issues/843
         //open the writable stream and write the file
-        const file = fs.createWriteStream(file_name)
+        const file = fs.createWriteStream(file_name);
         file.on("open", function (fd) {
           // @ts-ignore
           obj.Body?.pipe(file).on("finish", () => {
-            return resolve(file_name)
-          })
-        })
+            return resolve(file_name);
+          });
+        });
         // obj.Body?.pipe(fs.createWriteStream(file_name));
       }
     } catch (error) {
-      reject(error)
+      reject(error);
     }
-  })
-}
+  });
+};
